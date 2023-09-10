@@ -177,6 +177,9 @@ pyrightconfig.json
 #Project
 .vscode/
 uzipped/
-.csv
+
 
 # End of https://www.toptal.com/developers/gitignore/api/python
+*.csv
+*.xlsx
+*.xls
