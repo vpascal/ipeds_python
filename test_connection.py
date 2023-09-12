@@ -8,6 +8,8 @@ from src.oracle import oracle_params
 
 load_dotenv()
 
+''' this is just a test connection to Oracle cloud'''
+
 # connect to Oracle
 connection = oracledb.connect(params=oracle_params, dsn=os.getenv('dsn'))
 
