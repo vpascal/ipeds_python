@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-from collections import Counter
 
 
 def extract_links(url_list) -> list:
