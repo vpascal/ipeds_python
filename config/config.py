@@ -7,6 +7,5 @@ years =  [i for i in range(2022,2023)]
 
 data_url = 'https://nces.ed.gov/ipeds/datacenter/data/'
 
-db_username = 'ipeds'
-db_password = keyring.get_password('oracle_cloud', 'db_password')
-wallet_password = keyring.get_password('oracle_cloud', 'wallet_password')
+db_password = keyring.get_password('odwp', 'password')
+dsn = f"DSN=ODWD;PWD={db_password}"

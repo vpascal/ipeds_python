@@ -1,14 +1,9 @@
 import glob
-import os
-
-from dotenv import load_dotenv
+import pyodbc
+import config 
 from joblib import Parallel, delayed
-from oracledb import IntegrityError, connect
-
-from src.oracle import oracle_params
 from src.parse_file import create_table_query
 
-load_dotenv()
 
 """ this script creates empty tables in the Oracle db
 by reading 'table schema' from individual Excel files.
@@ -24,14 +19,14 @@ data_tables = Parallel(n_jobs=-1, verbose=10)(
 )
 
 
-# connect to Oracle
-connection = connect(params=oracle_params, dsn=os.getenv('dsn'))
+# connect to Oracle via ODBC
+connection = pyodbc.connect(config.dsn)
 
 with connection.cursor() as cursor:
     for table in data_tables:
         try:
             cursor.execute(table)
-        except IntegrityError:
+        except pyodbc.OperationalError:
             print("integrity issues!")
         else:
             print("table created")
