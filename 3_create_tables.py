@@ -1,9 +1,10 @@
 import glob
-import pyodbc
-import config 
-from joblib import Parallel, delayed
-from src.parse_file import create_table_query
 
+import pyodbc
+from joblib import Parallel, delayed
+
+import config
+from src.parse_file import create_table_query
 
 """ this script creates empty tables in the Oracle db
 by reading 'table schema' from individual Excel files.

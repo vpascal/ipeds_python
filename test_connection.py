@@ -1,18 +1,14 @@
+import pyodbc
 
-import os
+from config import config
 
-import oracledb
-from dotenv import load_dotenv
-
-from src.oracle import oracle_params
-
-load_dotenv()
-
-''' this is just a test connection to Oracle cloud'''
+""" this is just a test connection to Oracle server"""
 
 # connect to Oracle
-connection = oracledb.connect(params=oracle_params, dsn=os.getenv('dsn'))
+connection = pyodbc.connect(config.dsn)
 
 with connection.cursor() as cursor:
-    for row in cursor.execute("select 'hello','world' from dual"):
+    cursor.execute("select 'hello','world' from dual")
+    rows = cursor.fetchall()
+    for row in rows:
         print(row)
