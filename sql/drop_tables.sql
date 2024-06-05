@@ -1,3 +1,4 @@
+ -- this assume there's an IPEDS schema where all the tables are stored
 begin
   for rec in (SELECT
 				table_name

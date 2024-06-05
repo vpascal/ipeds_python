@@ -1,24 +1,19 @@
 import csv
 import glob
-import os
+import pyodbc
+from config import config
 
-import oracledb
-from dotenv import load_dotenv
-
-from src.oracle import oracle_params
 
 """ this script performs bulk loading of the data by processing
 individual csv files in the unzipped/production folder
 """
 
-load_dotenv()
 
 files = glob.glob(r"./unzipped/production/*.csv")
-
 BATCH_SIZE = 10000
 
 # connect to Oracle
-connection = oracledb.connect(params=oracle_params, dsn=os.getenv('dsn'))
+connection = pyodbc.connect(config.dsn)
 
 with connection.cursor() as cursor:
     for file in files:
@@ -33,6 +28,8 @@ with connection.cursor() as cursor:
             csv_reader = csv.reader(csv_file, delimiter=",")
             cols = next(csv_reader)
 
+            col_length = len(list(cols))
+
             length = range(1, len(cols) + 1)
             vals = [f":{i}," for i in length]
             vals = " ".join(str(e) for e in vals)
@@ -45,13 +42,21 @@ with connection.cursor() as cursor:
             print(table_name)
 
             for row in csv_reader:
-                if row[-1] == "":
+
+                if (len(row) > col_length):
                     row = row[:-1]
+
+                if (len(row) < col_length):
+                    row = row
+
                 data.append(row)
+
                 if len(data) % BATCH_SIZE == 0:
+                    cursor.fast_executemany = True
                     cursor.executemany(sql, data)
                     data = []
                     cols = []
             if data:
+                cursor.fast_executemany = True
                 cursor.executemany(sql, data)
             connection.commit()
