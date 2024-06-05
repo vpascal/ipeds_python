@@ -32,6 +32,7 @@ with connection.cursor() as cursor:
 
             csv_reader = csv.reader(csv_file, delimiter=",")
             cols = next(csv_reader)
+            col_length = len(list(cols))
 
             length = range(1, len(cols) + 1)
             vals = [f":{i}," for i in length]
@@ -45,8 +46,10 @@ with connection.cursor() as cursor:
             print(table_name)
 
             for row in csv_reader:
-                if row[-1] == "":
+                if (len(row) > col_length):
                     row = row[:-1]
+                if (len(row) < col_length):
+                    row = row
                 data.append(row)
                 if len(data) % BATCH_SIZE == 0:
                     cursor.executemany(sql, data)
