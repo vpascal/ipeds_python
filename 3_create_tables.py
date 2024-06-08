@@ -19,10 +19,10 @@ Refer to create_table_function for more detailed information.
 # let's create individual "create table ..." statements
 files = glob.glob(r"./unzipped/production/*.xls*")
 
+# create tables in parallel
 data_tables = Parallel(n_jobs=-1, verbose=10)(
     delayed(create_table_query)(file) for file in files
 )
-
 
 # connect to Oracle
 connection = connect(params=oracle_params, dsn=os.getenv('dsn'))
